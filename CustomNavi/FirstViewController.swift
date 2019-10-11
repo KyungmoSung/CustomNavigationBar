@@ -12,7 +12,7 @@ class FirstViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar(style: .main)
+        navigationBar(style: .main, title: "메인뷰컨트롤러")
     }
     
     @IBAction func show(_ sender: Any) {

@@ -11,7 +11,7 @@ import UIKit
 class CustomDetailNaviView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     
-    static let shared: CustomDetailNaviView = {
+    static let sharedInstance: CustomDetailNaviView = {
         let instance = UINib(nibName: "CustomDetailNaviView", bundle: nil).instantiate(withOwner: nil, options: nil)[0]
         return instance as! CustomDetailNaviView
     }()

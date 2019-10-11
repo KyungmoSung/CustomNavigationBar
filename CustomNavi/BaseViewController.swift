@@ -30,10 +30,13 @@ class BaseViewController: UIViewController {
         }
     }
     
-    func setupNavigationBar(style: CustomNaviBar.Style, title: String? = "") {
+    func navigationBar(style: CustomNaviBar.Style, title: String? = "") {
         navigationStyle = style
         navigationTitle = title
-        var topMargin = Constants.defaultStatusBarHeight
+    }
+    
+    func setupNavigationBar(style: CustomNaviBar.Style, title: String? = "") {
+        var topInset = Constants.defaultStatusBarHeight
         let height = style.rawValue
         
         // 기존 네비게이션 뷰 제거
@@ -43,36 +46,40 @@ class BaseViewController: UIViewController {
         
         // 네비게이션 바 높이 설정
         if let customNaviBar = navigationController?.navigationBar as? CustomNaviBar{
-            customNaviBar.customHeight = height
+            customNaviBar.height = height
             customNaviBar.sizeToFit()
         }
         
-        // Safe Area 높이 설정
-        if #available(iOS 11.0, *) {
-            additionalSafeAreaInsets.top = height - Constants.defaultNavigationHeight
-            let window = UIApplication.shared.keyWindow;
-            topMargin = window!.safeAreaInsets.top;
-        }
-        
-        switch style {
-        case .main:
-            let mainNavigationView = CustomNaviView.shared
-            navigationController?.view.addSubview(mainNavigationView)
-            mainNavigationView.snp_makeConstraints { (make) in
-                make.top.equalToSuperview().offset(topMargin)
-                make.left.equalToSuperview()
-                make.right.equalToSuperview()
-                make.height.equalTo(height)
+        DispatchQueue.main.async {
+            // Safe Area 높이 설정
+            if #available(iOS 11.0, *) {
+                self.additionalSafeAreaInsets.top = height - Constants.defaultNavigationHeight
+                if let window = UIApplication.shared.keyWindow {
+                    let top = window.safeAreaInsets.top
+                    topInset = top >= Constants.defaultStatusBarHeight ? top : Constants.defaultStatusBarHeight
+                }
             }
-        case .detail:
-            let detailNavigationView = CustomDetailNaviView.shared
-            detailNavigationView.titleLabel.text = title
-            navigationController?.view.addSubview(detailNavigationView)
-            detailNavigationView.snp_makeConstraints { (make) in
-                make.top.equalToSuperview().offset(topMargin)
-                make.left.equalToSuperview()
-                make.right.equalToSuperview()
-                make.height.equalTo(height)
+            
+            switch style {
+            case .main:
+                let mainNavigationView = CustomNaviView.shared
+                self.navigationController?.view.addSubview(mainNavigationView)
+                mainNavigationView.snp_makeConstraints { (make) in
+                    make.top.equalToSuperview().offset(topInset)
+                    make.left.equalToSuperview()
+                    make.right.equalToSuperview()
+                    make.height.equalTo(height)
+                }
+            case .detail:
+                let detailNavigationView = CustomDetailNaviView.shared
+                detailNavigationView.titleLabel.text = title
+                self.navigationController?.view.addSubview(detailNavigationView)
+                detailNavigationView.snp_makeConstraints { (make) in
+                    make.top.equalToSuperview().offset(topInset)
+                    make.left.equalToSuperview()
+                    make.right.equalToSuperview()
+                    make.height.equalTo(height)
+                }
             }
         }
     }

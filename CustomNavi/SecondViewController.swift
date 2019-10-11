@@ -12,7 +12,7 @@ class SecondViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar(style: .detail, title: "Detail \(String(describing: navigationController?.viewControllers.count))")
+        navigationBar(style: .detail, title: "상세뷰컨트롤러")
     }
     
     @IBAction func onClickBtn(_ sender: Any) {
